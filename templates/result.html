@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analysis Result | Resume Match Analyzer</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 15% 15%,
+                    #32145f 0%,
+                    transparent 32%
+                ),
+
+                radial-gradient(
+                    circle at 85% 75%,
+                    #50105c 0%,
+                    transparent 32%
+                ),
+
+                #080812;
+        }
+
+
+        /* --------------------------------
+           NAVBAR
+        -------------------------------- */
+
+        .navbar {
+
+            width: 100%;
+
+            padding: 22px 6%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            font-size: 20px;
+
+            font-weight: 800;
+        }
+
+
+        .brand img {
+
+            width: 42px;
+
+            height: 42px;
+
+            object-fit: contain;
+
+            border-radius: 11px;
+        }
+
+
+        .brand-name {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #c77dff,
+                    #ff5ca8
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            gap: 24px;
+        }
+
+
+        .nav-links a {
+
+            color: #bbb6ca;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+
+        .nav-links a:hover {
+
+            color: #e27dff;
+        }
+
+
+        /* --------------------------------
+           MAIN CONTAINER
+        -------------------------------- */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 1050px;
+
+            margin: 35px auto 60px;
+        }
+
+
+        /* --------------------------------
+           HEADER
+        -------------------------------- */
+
+        .page-header {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+
+        .page-header h1 {
+
+            font-size: 42px;
+
+            font-weight: 800;
+
+            margin-bottom: 12px;
+        }
+
+
+        .page-header h1 span {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #c77dff,
+                    #ff5ca8
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .page-header p {
+
+            color: #aaa6ba;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+
+        /* --------------------------------
+           OVERALL SCORE CARD
+        -------------------------------- */
+
+        .score-card {
+
+            background:
+                rgba(20, 19, 39, 0.86);
+
+            border:
+                1px solid
+                rgba(179, 108, 255, 0.25);
+
+            border-radius: 25px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 25px 80px
+                rgba(0, 0, 0, 0.45);
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .score-label {
+
+            color: #cda0ff;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.7px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* --------------------------------
+           SCORE CIRCLE
+        -------------------------------- */
+
+        .score-circle {
+
+            --score:
+                {{ similarity_score|float|round(1) }};
+
+            width: 190px;
+
+            height: 190px;
+
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            position: relative;
+
+            background:
+                conic-gradient(
+                    #b65cff calc(var(--score) * 1%),
+                    #242039 0
+                );
+        }
+
+
+        .score-circle::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 150px;
+
+            height: 150px;
+
+            border-radius: 50%;
+
+            background: #121124;
+        }
+
+
+        .score-value {
+
+            position: relative;
+
+            z-index: 1;
+
+            font-size: 40px;
+
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #c77dff,
+                    #ff5ca8
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .score-status {
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            margin-bottom: 8px;
+        }
+
+
+        .score-description {
+
+            color: #8f8aa2;
+
+            font-size: 13px;
+
+            max-width: 600px;
+
+            margin: auto;
+
+            line-height: 1.6;
+        }
+
+
+        /* --------------------------------
+           CATEGORY SECTION
+        -------------------------------- */
+
+        .section-heading {
+
+            font-size: 22px;
+
+            font-weight: 800;
+
+            margin: 35px 0 18px;
+        }
+
+
+        .section-heading span {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #c77dff,
+                    #ff5ca8
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .category-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+        }
+
+
+        .category-card {
+
+            background:
+                rgba(20, 19, 39, 0.82);
+
+            border:
+                1px solid
+                rgba(179, 108, 255, 0.20);
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            transition: 0.25s;
+        }
+
+
+        .category-card:hover {
+
+            transform:
+                translateY(-4px);
+
+            border-color:
+                rgba(202, 116, 255, 0.45);
+
+            box-shadow:
+                0 15px 35px
+                rgba(0, 0, 0, 0.30);
+        }
+
+
+        .category-top {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+
+        .category-name {
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            color: #eeeaf7;
+        }
+
+
+        .category-score {
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #c77dff,
+                    #ff5ca8
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        /* --------------------------------
+           PROGRESS BAR
+        -------------------------------- */
+
+        .progress {
+
+            width: 100%;
+
+            height: 8px;
+
+            border-radius: 20px;
+
+            background: #252039;
+
+            overflow: hidden;
+        }
+
+
+        .progress-bar {
+
+            height: 100%;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #a95cff,
+                    #ff4fa3
+                );
+        }
+
+
+        /* --------------------------------
+           CATEGORY DESCRIPTION
+        -------------------------------- */
+
+        .category-description {
+
+            color: #77738a;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+            margin-top: 13px;
+        }
+
+
+        /* --------------------------------
+           ACTION BUTTONS
+        -------------------------------- */
+
+        .actions {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            margin-top: 35px;
+        }
+
+
+        .btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 180px;
+
+            padding: 14px 22px;
+
+            border-radius: 12px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            transition: 0.25s;
+        }
+
+
+        .primary-btn {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #a95cff,
+                    #ff4fa3
+                );
+
+            color: white;
+
+            border: none;
+        }
+
+
+        .primary-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(214, 78, 255, 0.30);
+        }
+
+
+        .secondary-btn {
+
+            background:
+                rgba(25, 23, 48, 0.9);
+
+            color: #d7c8ed;
+
+            border:
+                1px solid
+                rgba(179, 108, 255, 0.25);
+        }
+
+
+        .secondary-btn:hover {
+
+            border-color: #b96cff;
+
+            color: white;
+        }
+
+
+        /* --------------------------------
+           FOOTER
+        -------------------------------- */
+
+        footer {
+
+            text-align: center;
+
+            color: #5f5a70;
+
+            font-size: 12px;
+
+            margin-top: 45px;
+
+            padding-bottom: 20px;
+        }
+
+
+        /* --------------------------------
+           RESPONSIVE
+        -------------------------------- */
+
+        @media (max-width: 800px) {
+
+            .category-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .page-header h1 {
+
+                font-size: 32px;
+            }
+
+
+            .score-circle {
+
+                width: 165px;
+
+                height: 165px;
+            }
+
+
+            .score-circle::before {
+
+                width: 130px;
+
+                height: 130px;
+            }
+
+
+            .actions {
+
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .btn {
+
+                width: 100%;
+            }
+
+
+            .navbar {
+
+                padding: 18px 5%;
+            }
+
+
+            .nav-links {
+
+                gap: 12px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+
+            <img
+                src="{{ url_for('static', filename='logo.png') }}"
+                alt="Resume Match Analyzer"
+            >
+
+            <span class="brand-name">
+                Resume Match Analyzer
+            </span>
+
+        </div>
+
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('history') }}">
+                History
+            </a>
+
+            <a href="{{ url_for('home') }}">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- MAIN -->
+
+    <main class="container">
+
+
+        <!-- HEADER -->
+
+        <section class="page-header">
+
+            <h1>
+                Your Resume
+                <span>Match Result</span>
+            </h1>
+
+            <p>
+                Review your overall compatibility and category-wise results.
+            </p>
+
+        </section>
+
+
+
+        <!-- OVERALL SCORE -->
+
+        <section class="score-card">
+
+            <div class="score-label">
+                Overall Match Score
+            </div>
+
+
+            <div class="score-circle">
+
+                <div class="score-value">
+
+                    {{ similarity_score|float|round(1) }}%
+
+                </div>
+
+            </div>
+
+
+            {% if similarity_score >= 75 %}
+
+                <div class="score-status">
+                    Strong Match
+                </div>
+
+                <p class="score-description">
+                    Your resume has a strong alignment with the
+                    requirements in the provided job description.
+                </p>
+
+            {% elif similarity_score >= 50 %}
+
+                <div class="score-status">
+                    Moderate Match
+                </div>
+
+                <p class="score-description">
+                    Your resume has a moderate level of alignment
+                    with the provided job description.
+                </p>
+
+            {% else %}
+
+                <div class="score-status">
+                    Low Match
+                </div>
+
+                <p class="score-description">
+                    Your resume has limited alignment with the
+                    requirements in the provided job description.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- CATEGORY ANALYSIS -->
+
+        <div class="section-heading">
+
+            <span>Category Analysis</span>
+
+        </div>
+
+
+
+        <section class="category-grid">
+
+
+            <!-- TECHNICAL SKILLS -->
+
+            <div class="category-card">
+
+                <div class="category-top">
+
+                    <div class="category-name">
+                        Technical Skills
+                    </div>
+
+                    <div class="category-score">
+                        {{ technical_score|float|round(1) }}%
+                    </div>
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        style="width: {{ technical_score|float|round(1) }}%;">
+                    </div>
+
+                </div>
+
+
+               
+            </div>
+
+
+
+            <!-- SOFT SKILLS -->
+
+            <div class="category-card">
+
+                <div class="category-top">
+
+                    <div class="category-name">
+                        Soft Skills
+                    </div>
+
+                    <div class="category-score">
+                        {{ soft_score|float|round(1) }}%
+                    </div>
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        style="width: {{ soft_score|float|round(1) }}%;">
+                    </div>
+
+                </div>
+
+
+                
+
+            </div>
+
+
+
+            <!-- TOOLS -->
+
+            <div class="category-card">
+
+                <div class="category-top">
+
+                    <div class="category-name">
+                        Tools & Technologies
+                    </div>
+
+                    <div class="category-score">
+                        {{ tools_score|float|round(1) }}%
+                    </div>
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        style="width: {{ tools_score|float|round(1) }}%;">
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ACTION BUTTONS -->
+
+        <div class="actions">
+
+            <a
+                href="{{ url_for('upload_resume') }}"
+                class="btn primary-btn"
+            >
+                Analyze Another
+            </a>
+
+
+            <a
+                href="{{ url_for('history') }}"
+                class="btn secondary-btn"
+            >
+                View History
+            </a>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        Resume Match Analyzer
+
+    </footer>
+
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Match Analyzer</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            color: white;
+            background:
+                radial-gradient(circle at 15% 15%, #32145f 0%, transparent 32%),
+                radial-gradient(circle at 85% 75%, #50105c 0%, transparent 32%),
+                #080812;
+        }
+
+        /* ---------- NAVBAR ---------- */
+
+        .navbar {
+            width: 100%;
+            padding: 22px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .brand img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 11px;
+        }
+
+        .brand-name {
+            background: linear-gradient(90deg, #c77dff, #ff5ca8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: #bbb6ca;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #e27dff;
+        }
+
+        /* ---------- HERO ---------- */
+
+        .hero {
+            text-align: center;
+            max-width: 900px;
+            margin: 55px auto 45px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, #c77dff, #ff5ca8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: #aaa6ba;
+            font-size: 16px;
+            margin-top: 18px;
+            line-height: 1.6;
+        }
+
+        /* ---------- MAIN CARD ---------- */
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .analyzer-card {
+            background: rgba(20, 19, 39, 0.82);
+            border: 1px solid rgba(179, 108, 255, 0.25);
+            border-radius: 26px;
+            padding: 35px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: #cda0ff;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title span {
+            color: #77738a;
+            margin-right: 8px;
+        }
+
+        /* ---------- TWO COLUMNS ---------- */
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 0.85fr;
+            gap: 25px;
+        }
+
+        /* ---------- JOB DESCRIPTION ---------- */
+
+        .job-box textarea {
+            width: 100%;
+            height: 360px;
+            resize: vertical;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(170, 130, 255, 0.25);
+            background: rgba(7, 7, 20, 0.72);
+            color: white;
+            font-size: 15px;
+            line-height: 1.6;
+            outline: none;
+        }
+
+        .job-box textarea:focus {
+            border-color: #b96cff;
+            box-shadow: 0 0 0 3px rgba(185, 108, 255, 0.1);
+        }
+
+        .job-box textarea::placeholder {
+            color: #686477;
+        }
+
+        /* ---------- RESUME UPLOAD ---------- */
+
+        .upload-box {
+            height: 360px;
+            border: 1.5px dashed rgba(200, 120, 255, 0.45);
+            border-radius: 18px;
+            background: rgba(12, 11, 30, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 25px;
+            transition: 0.25s;
+        }
+
+        .upload-box:hover {
+            border-color: #dc72ff;
+            background: rgba(40, 20, 65, 0.5);
+        }
+
+        .upload-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            background: linear-gradient(135deg, #6637c9, #d94d9c);
+            margin-bottom: 20px;
+        }
+
+        .upload-box h3 {
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .upload-box p {
+            color: #858093;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            width: 100%;
+            max-width: 280px;
+            color: #aaa6b8;
+            font-size: 13px;
+        }
+
+        .file-input::file-selector-button {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 9px;
+            background: #30234d;
+            color: #e4caff;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        /* ---------- BUTTON ---------- */
+
+        .analyze-btn {
+            width: 100%;
+            margin-top: 28px;
+            padding: 17px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #a95cff, #ff4fa3);
+            color: white;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(214, 78, 255, 0.35);
+        }
+
+        /* ---------- FLASH ---------- */
+
+        .flash {
+            margin-bottom: 20px;
+            padding: 13px;
+            border-radius: 10px;
+            text-align: center;
+            background: rgba(255, 75, 130, 0.15);
+            color: #ff9ac5;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+
+        @media (max-width: 800px) {
+
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .job-box textarea,
+            .upload-box {
+                height: 300px;
+            }
+
+            .navbar {
+                padding: 18px 5%;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .hero {
+                margin-top: 35px;
+            }
+
+            .analyzer-card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <div class="brand">
+            <img src="{{ url_for('static', filename='logo.png') }}"
+                 alt="Resume Match Analyzer">
+            <span class="brand-name">Resume Match Analyzer</span>
+        </div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('history') }}">History</a>
+            <a href="{{ url_for('home') }}">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <h1>
+            Match your resume with
+            <span>the right opportunity.</span>
+        </h1>
+
+        <p>
+            Compare your resume with a job description and get a clear
+            compatibility score.
+        </p>
+
+    </section>
+
+
+    <!-- ANALYZER -->
+    <main class="container">
+
+        <div class="analyzer-card">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                <div class="analysis-grid">
+
+                    <!-- JOB DESCRIPTION -->
+                    <div class="job-box">
+
+                        <div class="section-title">
+                            <span>01</span> Job Description
+                        </div>
+
+                        <textarea
+                            name="job_description"
+                            placeholder="Paste the complete job description here..."
+                            required></textarea>
+
+                    </div>
+
+
+                    <!-- RESUME -->
+                    <div>
+
+                        <div class="section-title">
+                            <span>02</span> Your Resume
+                        </div>
+
+                        <div class="upload-box">
+
+                            <div class="upload-icon">📄</div>
+
+                            <h3>Upload your resume</h3>
+
+                            <p>
+                                PDF or DOCX
+                            </p>
+
+                            <input
+                                type="file"
+                                name="resume"
+                                class="file-input"
+                                accept=".pdf,.docx"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button type="submit" class="analyze-btn">
+                    Analyze Resume
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

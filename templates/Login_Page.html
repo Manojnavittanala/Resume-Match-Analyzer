@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Resume Match Analyzer</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at 20% 20%, #32145f 0%, transparent 35%),
+                radial-gradient(circle at 80% 80%, #50105c 0%, transparent 35%),
+                #080812;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 470px;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            margin-bottom: 14px;
+            border-radius: 22px;
+        }
+
+        .brand {
+            font-size: 30px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #b66cff, #ff4fa3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #aaa6bd;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(25, 23, 48, 0.82);
+            border: 1px solid rgba(180, 110, 255, 0.25);
+            border-radius: 24px;
+            padding: 34px;
+            text-align: left;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        .card h2 {
+            text-align: center;
+            font-size: 27px;
+            margin-bottom: 28px;
+            background: linear-gradient(90deg, #c47aff, #ff68ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #eeeaf7;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(180, 140, 255, 0.28);
+            background: rgba(10, 10, 25, 0.65);
+            color: white;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: #c46cff;
+            box-shadow: 0 0 0 3px rgba(196, 108, 255, 0.12);
+        }
+
+        input::placeholder {
+            color: #77738a;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            margin-top: 8px;
+            background: linear-gradient(90deg, #a95cff, #ff4fa3);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 80, 255, 0.35);
+        }
+
+        .signup-text {
+            text-align: center;
+            margin-top: 24px;
+            color: #aaa6bd;
+            font-size: 14px;
+        }
+
+        .signup-text a {
+            color: #d879ff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .signup-text a:hover {
+            color: #ff6baa;
+        }
+
+        .flash {
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            text-align: center;
+            background: rgba(255, 75, 130, 0.15);
+            color: #ff9ac5;
+            font-size: 14px;
+        }
+
+        @media (max-width: 500px) {
+            .page {
+                padding: 20px 15px;
+            }
+
+            .card {
+                padding: 26px 20px;
+            }
+
+            .brand {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <img src="{{ url_for('static', filename='logo.png') }}"
+         alt="Resume Match Analyzer Logo"
+         class="logo">
+
+    <div class="brand">Resume Match Analyzer</div>
+
+    <div class="subtitle">
+        Analyze your resume against job opportunities
+    </div>
+
+    <div class="card">
+
+        <h2>Sign In</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                <label>Email</label>
+                {{ form.email(
+                    placeholder="Enter your email",
+                    autocomplete="email"
+                ) }}
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                {{ form.password(
+                    placeholder="Enter your password",
+                    autocomplete="current-password"
+                ) }}
+            </div>
+
+            {{ form.submit(class="login-btn", value="Sign In") }}
+
+        </form>
+
+        <div class="signup-text">
+            Don't have an account?
+            <a href="{{ url_for('signup') }}">Create one</a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
